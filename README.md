@@ -1,5 +1,0 @@
-# Open_Policy_Agent_AWS
-
-
-sk-akuZRLkxeCj4AYCtW8NzkwkS7ojGFJAKYNCsM5s9-mT3BlbkFJkng60
-iakfOITcUT-qthmnKpGzCNQ49w4XgHj_zQ9gA
