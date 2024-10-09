@@ -79,7 +79,7 @@ allow {
 You can run the evaluation against your `plan.json` output file generated from your Terraform plans. The command would look like this:
 
 ```bash
-opa eval -i plan.json -d policy.rego "data.aws.vpc.policies.allow"
+opa eval -i plan.json -d Opa-Policy-For-Vpc.rego "data.aws.vpc.policies.deny"
 ```
 
 This format allows you to efficiently integrate these VPC policies within your existing Terraform workflows and ensure that VPC configurations comply with established best practices before deployment.
