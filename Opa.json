@@ -1,0 +1,62 @@
+[
+    {
+        "policy": "package aws.s3.policies\n\n#1. Enforce SSL requests only on S3 Buckets\ndeny[msg] {\n    resource := input.resource_changes[_]\n    resource.type == \"aws_s3_bucket\"\n    not resource.change.after.https_redirection_enabled\n    msg = sprintf(\"S3 Bucket '%s' must enforce SSL requests.\", [resource.name])\n}",
+        "service": "s3",
+        "description": "Enforce SSL requests only on S3 Buckets"
+    },
+    {
+        "policy": "package aws.s3.policies\n\n#2. Ensure versioning is enabled for S3 Buckets\ndeny[msg] {\n    resource := input.resource_changes[_]\n    resource.type == \"aws_s3_bucket\"\n    not resource.change.after.versioning.enabled\n    msg = sprintf(\"S3 Bucket '%s' must have versioning enabled.\", [resource.name])\n}",
+        "service": "s3",
+        "description": "Ensure versioning is enabled for S3 Buckets"
+    },
+    {
+        "policy": "package aws.iam.policies\n\n#1. Block IAM users from using certain KMS actions\ndeny[msg] {\n    resource := input.resource_changes[_]\n    resource.type == \"aws_iam_policy\"\n    resource.change.after.policy[_] == \"kms:CreateKey\"\n    msg = sprintf(\"IAM policy '%s' uses blocked KMS action.\", [resource.name])\n}",
+        "service": "iam",
+        "description": "Block IAM users from using certain KMS actions"
+    },
+    {
+        "policy": "package aws.iam.policies\n\n#2. Check for IAM users with no MFA enabled\ndeny[msg] {\n    resource := input.resource_changes[_]\n    resource.type == \"aws_iam_user\"\n    not resource.change.after.mfa_enabled\n    msg = sprintf(\"IAM user '%s' does not have MFA enabled.\", [resource.name])\n}",
+        "service": "iam",
+        "description": "Check for IAM users with no MFA enabled"
+    },
+    {
+        "policy": "package aws.vpc.policies\n\n#1. Ensure default security group is closed\ndeny[msg] {\n    resource := input.resource_changes[_]\n    resource.type == \"aws_security_group\"\n    resource.change.after.default == true\n    count(resource.change.after.ingress) > 0\n    msg = sprintf(\"Default security group '%s' is not closed.\", [resource.name])\n}",
+        "service": "vpc",
+        "description": "Ensure default security group is closed"
+    },
+    {
+        "policy": "package aws.vpc.policies\n\n#2. Ensure VPC flow logs are enabled\ndeny[msg] {\n    resource := input.resource_changes[_]\n    resource.type == \"aws_vpc\"\n    not resource.change.after.flow_logs_enabled\n    msg = sprintf(\"VPC '%s' does not have flow logs enabled.\", [resource.name])\n}",
+        "service": "vpc",
+        "description": "Ensure VPC flow logs are enabled"
+    },
+    {
+        "policy": "package aws.lambda.policies\n\n#1. Prohibit public access to Lambda functions\ndeny[msg] {\n    resource := input.resource_changes[_]\n    resource.type == \"aws_lambda_function\"\n    resource.change.after.public_access == true\n    msg = sprintf(\"Lambda function '%s' must not be publicly accessible.\", [resource.name])\n}",
+        "service": "lambda",
+        "description": "Prohibit public access to Lambda functions"
+    },
+    {
+        "policy": "package aws.lambda.policies\n\n#2. Ensure Lambda functions are configured with a dead-letter queue\ndeny[msg] {\n    resource := input.resource_changes[_]\n    resource.type == \"aws_lambda_function\"\n    not resource.change.after.dead_letter_config\n    msg = sprintf(\"Lambda function '%s' must have a dead-letter queue configured.\", [resource.name])\n}",
+        "service": "lambda",
+        "description": "Ensure Lambda functions are configured with a dead-letter queue"
+    },
+    {
+        "policy": "package aws.eks.policies\n\n#1. Ensure EKS cluster logging is enabled\ndeny[msg] {\n    resource := input.resource_changes[_]\n    resource.type == \"aws_eks_cluster\"\n    not resource.change.after.logging_enabled\n    msg = sprintf(\"EKS cluster '%s' does not have logging enabled.\", [resource.name])\n}",
+        "service": "eks",
+        "description": "Ensure EKS cluster logging is enabled"
+    },
+    {
+        "policy": "package aws.eks.policies\n\n#2. Check for EKS cluster public endpoint access\ndeny[msg] {\n    resource := input.resource_changes[_]\n    resource.type == \"aws_eks_cluster\"\n    resource.change.after.endpoint_public_access == true\n    msg = sprintf(\"EKS cluster '%s' has public endpoint access enabled.\", [resource.name])\n}",
+        "service": "eks",
+        "description": "Check for EKS cluster public endpoint access"
+    },
+    {
+        "policy": "package aws.efs.policies\n\n#1. Ensure EFS automatic backups are enabled\ndeny[msg] {\n    resource := input.resource_changes[_]\n    resource.type == \"aws_efs_file_system\"\n    not resource.change.after.automatic_backups_enabled\n    msg = sprintf(\"EFS '%s' does not have automatic backups enabled.\", [resource.name])\n}",
+        "service": "efs",
+        "description": "Ensure EFS automatic backups are enabled"
+    },
+    {
+        "policy": "package aws.efs.policies\n\n#2. Ensure EFS file system is encrypted\ndeny[msg] {\n    resource := input.resource_changes[_]\n    resource.type == \"aws_efs_file_system\"\n    not resource.change.after.encrypted\n    msg = sprintf(\"EFS '%s' is not encrypted.\", [resource.name])\n}",
+        "service": "efs",
+        "description": "Ensure EFS file system is encrypted"
+    }
+]
