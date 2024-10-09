@@ -165,6 +165,4 @@ deny[msg] {
     msg = sprintf("S3 Bucket %v does not have server-side encryption enabled", [input.s3_bucket.name])
 }
 
-allow {
-    not deny[_]
-}
+
