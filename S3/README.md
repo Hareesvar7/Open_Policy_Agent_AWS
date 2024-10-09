@@ -191,7 +191,7 @@ allow {
 To evaluate these policies against your `plan.json` output, use the following command:
 
 ```bash
-opa eval -i plan.json -d policy.rego "data.aws.s3.policies.deny"
+opa eval -i plan.json -d Opa-Policy-For-S3.rego "data.aws.s3.policies.deny"
 ```
 
 This structure allows you to efficiently integrate these S3 policies within your existing Terraform workflows and ensure that S3 configurations comply with established best practices before deployment.
